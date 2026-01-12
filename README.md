@@ -26,7 +26,7 @@ Express relay server that receives Meta (Messenger + Instagram) webhook requests
    - `MAPPING_PATH` - Path to mapping JSON file (default: `src/config/mapping.json`)
    - `FORWARD_TIMEOUT_MS` - Request timeout in milliseconds (default: 5000)
 
-3. **Configure mapping:**
+3. **Configure mapping (local dev):**
    Edit `src/config/mapping.json` to map page/IG IDs under platform keys:
    ```json
    {
@@ -44,6 +44,35 @@ Express relay server that receives Meta (Messenger + Instagram) webhook requests
 4. **Start server:**
    ```bash
    pnpm start
+   ```
+
+## Docker Compose (deploy anywhere)
+
+1. Ensure Docker + Docker Compose are installed.
+2. Prepare config volume (mounted read-only): edit `./config/mapping.json` (nested platform structure shown above).
+3. Build and run:
+   ```bash
+   docker compose up -d --build
+   ```
+   - Exposes host port **80** → container **3000**.
+   - Mounts `./config/mapping.json` into the container at `/config/mapping.json`.
+   - Uses `MAPPING_PATH=/config/mapping.json` by default.
+4. Check logs / status:
+   ```bash
+   docker compose logs -f relay
+   docker compose ps
+   ```
+5. Update mapping without rebuild: edit `./config/mapping.json`, then reload:
+   ```bash
+   docker compose kill -s HUP relay
+   ```
+6. Stop:
+   ```bash
+   docker compose down
+   ```
+7. Override env at runtime (example):
+   ```bash
+   FORWARD_TIMEOUT_MS=7000 docker compose up -d
    ```
 
 ## Meta App Dashboard Configuration
@@ -108,6 +137,11 @@ Expected response: `{"status":"ok"}`
 Send `SIGHUP` signal to reload mapping without restarting:
 ```bash
 kill -HUP <process_id>
+```
+
+For Docker Compose deployments:
+```bash
+docker compose kill -s HUP relay
 ```
 
 ## References
