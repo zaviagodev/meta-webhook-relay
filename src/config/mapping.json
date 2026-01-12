@@ -1,0 +1,10 @@
+{
+  "messenger": {
+    "example_page_id_1": "https://downstream.example.com/webhooks/messenger",
+    "example_page_id_2": "https://downstream.example.com/webhooks/messenger"
+  },
+  "instagram": {
+    "example_ig_account_id_1": "https://downstream.example.com/webhooks/instagram",
+    "example_ig_account_id_2": "https://downstream.example.com/webhooks/instagram"
+  }
+}
